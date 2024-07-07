@@ -4,7 +4,6 @@ use crate::command_line_tasks;
 
 pub fn start_game() {
     let mut game = Game::new();
-    command_line_tasks::clear_terminal();
     game.print_board();
     game.play_game();
 
@@ -39,12 +38,29 @@ impl Game {
     }
 
     pub fn print_board(&self) {
+        command_line_tasks::clear_terminal();
+        let mut numbers_row = String::from("   ");
+        for i in 1..=7 {
+            numbers_row.push_str(&format!("-\x1b[32m{}\x1b[0m-", i));
+            if i < 7 {
+                numbers_row.push('+');
+            }
+        }
+        println!("{}", numbers_row);
+
         for i in (0..6).rev() {
             let mut row_string = String::new();
             
             row_string.push_str(" | ");
             for j in 0..7 {
-                row_string.push_str(&self.board[i * 7 + j].to_string());
+                let cell = self.board[i * 7 + j];
+                let coloured_cell = match cell {
+                    'X' => format!("\x1b[31m{}\x1b[0m", cell),
+                    'O' => format!("\x1b[34m{}\x1b[0m", cell),
+                    _ => cell.to_string(),
+                };
+                row_string.push_str(&coloured_cell);
+                // row_string.push_str(&self.board[i * 7 + j].to_string());
                 row_string.push_str(" | ");
             }
             println!(" {}", row_string);
