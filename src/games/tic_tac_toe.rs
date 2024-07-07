@@ -3,7 +3,6 @@ use crate::command_line_tasks;
 
 pub fn start_game() {
     let mut game = Game::new();
-    command_line_tasks::clear_terminal();
     game.print_board();
     game.play_game();
 
@@ -34,12 +33,21 @@ impl Game {
         }
     }
 
+    fn colour_char(&self, game_char: char) -> String {
+        match game_char {
+            'X' => format!("\x1b[31m{}\x1b[0m", game_char),
+            'O' => format!("\x1b[32m{}\x1b[0m", game_char),
+            _ => " ".to_string(),
+        }
+    }
+
     pub fn print_board(&self) {
-        println!(" {} | {} | {}", self.board[0], self.board[1], self.board[2]);
+        command_line_tasks::clear_terminal();
+        println!(" {} | {} | {}", self.colour_char(self.board[0]), self.colour_char(self.board[1]), self.colour_char(self.board[2]));
         println!("---+---+---");
-        println!(" {} | {} | {}", self.board[3], self.board[4], self.board[5]);
+        println!(" {} | {} | {}", self.colour_char(self.board[3]), self.colour_char(self.board[4]), self.colour_char(self.board[5]));
         println!("---+---+---");
-        println!(" {} | {} | {}", self.board[6], self.board[7], self.board[8]);
+        println!(" {} | {} | {}", self.colour_char(self.board[6]), self.colour_char(self.board[7]), self.colour_char(self.board[8]));
     }
 
     pub fn play_game(&mut self) {
